@@ -6,7 +6,7 @@ projects. I hope this repository helps you as much as it helps me.
 
 ### Days 16-24: Starting SwiftUI
 
-* [Day 16][day-016] – Project 1, part one
+* [Day 16][day-016] – Project 1, part one:			[Complete][day-016-tag]
 * [Day 17][day-017] – Project 1, part two
 * [Day 18][day-018] – Project 1, part three
 * [Day 19][day-019] – Challenge day
