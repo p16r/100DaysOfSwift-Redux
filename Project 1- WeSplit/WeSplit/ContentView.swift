@@ -7,7 +7,17 @@
 
 import SwiftUI
 
+extension Locale {
+
+	var currencyFormat: FloatingPointFormatStyle<Double>.Currency {
+		.currency(code: currency?.identifier ?? "USD")
+	}
+
+}
+
 struct ContentView: View {
+
+	@Environment(\.locale) private var locale
 
 	@State private var checkAmount = 0.0
 	@State private var numberOfPeople = 2
@@ -15,15 +25,18 @@ struct ContentView: View {
 
 	@FocusState private var amountIsFocused: Bool
 
-	private let tipPercentages = [10, 15, 20, 25, 0]
-
-	private var totalPerPerson: Double {
-		let peopleCount = Double(numberOfPeople + 2)
+	private var totalAmount: Double {
 		let tipSelection = Double(tipPercentage)
 		let tipValue = checkAmount / 100 * tipSelection
 
 		let grandTotal = checkAmount + tipValue
-		let amountPerPerson = grandTotal / peopleCount
+
+		return grandTotal
+	}
+
+	private var totalPerPerson: Double {
+		let peopleCount = Double(numberOfPeople + 2)
+		let amountPerPerson = totalAmount / peopleCount
 
 		return amountPerPerson
 	}
@@ -32,7 +45,7 @@ struct ContentView: View {
 		NavigationView {
 			Form {
 				Section {
-					TextField("Amount", value: $checkAmount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
+					TextField("Amount", value: $checkAmount, format: locale.currencyFormat)
 						.keyboardType(.decimalPad)
 						.focused($amountIsFocused)
 
@@ -46,20 +59,33 @@ struct ContentView: View {
 				Section(
 					content: {
 						Picker("Tip percentage", selection: $tipPercentage) {
-							ForEach(tipPercentages, id: \.self) {
+							ForEach(0..<101, id: \.self) {
 								Text($0, format: .percent)
 							}
 						}
-						.pickerStyle(.segmented)
 					},
 					header: {
 						Text("How much tip do you want to leave?")
 					}
 				)
 
-				Section {
-					Text(totalPerPerson, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
-				}
+				Section(
+					content: {
+						Text(totalAmount, format: locale.currencyFormat)
+					},
+					header: {
+						Text("Total amount")
+					}
+				)
+
+				Section(
+					content: {
+						Text(totalPerPerson, format: locale.currencyFormat)
+					},
+					header: {
+						Text("Amount per person")
+					}
+				)
 			}
 			.navigationTitle("WeSplit")
 			.toolbar {
