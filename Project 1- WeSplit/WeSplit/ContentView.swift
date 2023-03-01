@@ -7,7 +7,17 @@
 
 import SwiftUI
 
+extension Locale {
+
+	var currencyFormat: FloatingPointFormatStyle<Double>.Currency {
+		.currency(code: currency?.identifier ?? "USD")
+	}
+
+}
+
 struct ContentView: View {
+
+	@Environment(\.locale) private var locale
 
 	@State private var checkAmount = 0.0
 	@State private var numberOfPeople = 2
@@ -35,7 +45,7 @@ struct ContentView: View {
 		NavigationView {
 			Form {
 				Section {
-					TextField("Amount", value: $checkAmount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
+					TextField("Amount", value: $checkAmount, format: locale.currencyFormat)
 						.keyboardType(.decimalPad)
 						.focused($amountIsFocused)
 
@@ -61,7 +71,7 @@ struct ContentView: View {
 
 				Section(
 					content: {
-						Text(totalAmount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
+						Text(totalAmount, format: locale.currencyFormat)
 					},
 					header: {
 						Text("Total amount")
@@ -70,7 +80,7 @@ struct ContentView: View {
 
 				Section(
 					content: {
-						Text(totalPerPerson, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
+						Text(totalPerPerson, format: locale.currencyFormat)
 					},
 					header: {
 						Text("Amount per person")
